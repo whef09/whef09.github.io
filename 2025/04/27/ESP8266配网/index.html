@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Whef">
+
+
+
+
+
+<title>ESP8266 使用Web配网 | WALL.E</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">WALL.E&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">WALL.E&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script> <!-- 引入文章目录的部分模板 -->
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <!-- 显示文章标题 -->
+            <h1 class="post-title">ESP8266 使用Web配网</h1>
+            
+            
+                <div class="post-meta">
+                    
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Whef</a>
+                    
+
+                    
+                    
+                        <span class="post-time">
+                        Date: <a href="#">2025, 四月 27&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>又好长时间没有更新内容了，颓废了很长时间，这两天终于是提起兴趣来搞点东西了，因为我之前买了一块ESP8266的板子一直没有动，今天想起来研究研究，然后在网上找了一些教程配了一下网，也就只配了一个网，现在来记录一下吧。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><p>我使用的是一个CP2102的ESP8266开发板，还需要一根数据线就够了。</p>
+<h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arduino</span><br></pre></td></tr></table></figure>
+<h2 id="配网流程"><a href="#配网流程" class="headerlink" title="配网流程"></a>配网流程</h2><p>操作很少也很简单，就不多啰嗦了，直接开始了<br>1、将代码编译后烧录到板子<br>2、烧录完成之后板子刚开始会尝试自动，灯光闪烁频率1次&#x2F;秒，几秒后灯光常亮进入配网模式，板子会生成一个热点。<br>3、连接热点之后灯光熄灭，打开浏览器输入网址<a target="_blank" rel="noopener" href="http://192.168.4.1/">http://192.168.4.1/</a> 输入目标网络的名称和密码，点击连接几秒之后灯光疯狂闪烁说明连接成功。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#include &lt;ESP8266WiFi.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;WiFiClient.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;ESP8266WebServer.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;ESP8266mDNS.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ifndef STASSID</span></span><br><span class="line"><span class="comment">#define STASSID &quot;ESP8266&quot;</span></span><br><span class="line"><span class="comment">#define STAPSK  &quot;qtds1210&quot;</span></span><br><span class="line"><span class="comment">#endif</span></span><br><span class="line"></span><br><span class="line">const char* ssid = STASSID;</span><br><span class="line">const char* password = STAPSK;</span><br><span class="line"></span><br><span class="line">ESP8266WebServer server(80);</span><br><span class="line">bool LED_Flag = <span class="literal">false</span>;</span><br><span class="line">String str = </span><br><span class="line"><span class="string">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=\&quot;UTF-8\&quot;&gt;&lt;meta name=\&quot;viewport\&quot;content=\&quot;width=device-width, initial-scale=1.0\&quot;&gt;&lt;meta http-equiv=\&quot;X-UA-Compatible\&quot;content=\&quot;ie=edge\&quot;&gt;&lt;title&gt;不知名up的ESP8266网页配网&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;form name=\&quot;my\&quot;&gt;WiFi名称：&lt;input type=\&quot;text\&quot;name=\&quot;s\&quot;placeholder=\&quot;请输入您WiFi的名称\&quot;id=\&quot;aa\&quot;&gt;&lt;br&gt;WiFi密码：&lt;input type=\&quot;text\&quot;name=\&quot;p\&quot;placeholder=\&quot;请输入您WiFi的密码\&quot;id=\&quot;bb\&quot;&gt;&lt;br&gt;&lt;input type=\&quot;button\&quot;value=\&quot;连接\&quot;onclick=\&quot;wifi()\&quot;&gt;&lt;/form&gt;&lt;script language=\&quot;javascript\&quot;&gt;function wifi()&#123;var ssid=my.s.value;var password=bb.value;var xmlhttp=new XMLHttpRequest();xmlhttp.open(\&quot;GET\&quot;,\&quot;/HandleVal?ssid=\&quot;+ssid+\&quot;&amp;password=\&quot;+password,true);xmlhttp.send()&#125;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span>;</span><br><span class="line">/*****************************************************</span><br><span class="line"> * 函数名称：handleRoot()</span><br><span class="line"> * 函数说明：客户端请求回调函数</span><br><span class="line"> * 参数说明：无</span><br><span class="line">******************************************************/</span><br><span class="line">void <span class="function"><span class="title">handleRoot</span></span>() &#123;</span><br><span class="line">  server.send(200, <span class="string">&quot;text/html&quot;</span>, str);</span><br><span class="line">&#125;</span><br><span class="line">/*****************************************************</span><br><span class="line"> * 函数名称：HandleVal()</span><br><span class="line"> * 函数说明：对客户端请求返回值处理</span><br><span class="line"> * 参数说明：无</span><br><span class="line">******************************************************/</span><br><span class="line">void <span class="function"><span class="title">HandleVal</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    String wifis = server.arg(<span class="string">&quot;ssid&quot;</span>); //从JavaScript发送的数据中找ssid的值</span><br><span class="line">    String wifip = server.arg(<span class="string">&quot;password&quot;</span>); //从JavaScript发送的数据中找password的值</span><br><span class="line">    Serial.println(wifis); Serial.println(wifip);</span><br><span class="line">    WiFi.begin(wifis,wifip);</span><br><span class="line">&#125;</span><br><span class="line">/*****************************************************</span><br><span class="line"> * 函数名称：handleNotFound()</span><br><span class="line"> * 函数说明：响应失败函数</span><br><span class="line"> * 参数说明：无</span><br><span class="line">******************************************************/</span><br><span class="line">void <span class="function"><span class="title">handleNotFound</span></span>() &#123;</span><br><span class="line">  digitalWrite(LED_BUILTIN, 0);</span><br><span class="line">  String message = <span class="string">&quot;File Not Found\n\n&quot;</span>;</span><br><span class="line">  message += <span class="string">&quot;URI: &quot;</span>;</span><br><span class="line">  message += server.uri();</span><br><span class="line">  message += <span class="string">&quot;\nMethod: &quot;</span>;</span><br><span class="line">  message += (server.method() == HTTP_GET) ? <span class="string">&quot;GET&quot;</span> : <span class="string">&quot;POST&quot;</span>;</span><br><span class="line">  message += <span class="string">&quot;\nArguments: &quot;</span>;</span><br><span class="line">  message += server.args();</span><br><span class="line">  message += <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (uint8_t i = 0; i &lt; server.args(); i++) &#123;</span><br><span class="line">    message += <span class="string">&quot; &quot;</span> + server.argName(i) + <span class="string">&quot;: &quot;</span> + server.arg(i) + <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  server.send(404, <span class="string">&quot;text/plain&quot;</span>, message);</span><br><span class="line">  digitalWrite(LED_BUILTIN, 1);</span><br><span class="line">&#125;</span><br><span class="line">/*****************************************************</span><br><span class="line"> * 函数名称：autoConfig()</span><br><span class="line"> * 函数说明：自动连接WiFi函数</span><br><span class="line"> * 参数说明：无</span><br><span class="line"> * 返回值说明:<span class="literal">true</span>：连接成功 <span class="literal">false</span>：连接失败</span><br><span class="line">******************************************************/</span><br><span class="line">bool <span class="function"><span class="title">autoConfig</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">  WiFi.mode(WIFI_STA);</span><br><span class="line">  WiFi.begin();</span><br><span class="line">  Serial.<span class="built_in">print</span>(<span class="string">&quot;AutoConfig Waiting......&quot;</span>);</span><br><span class="line">  <span class="keyword">for</span> (int i = 0; i &lt; 20; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (WiFi.status() == WL_CONNECTED)</span><br><span class="line">    &#123;</span><br><span class="line">      Serial.println(<span class="string">&quot;AutoConfig Success&quot;</span>);</span><br><span class="line">      Serial.<span class="built_in">printf</span>(<span class="string">&quot;SSID:%s\r\n&quot;</span>, WiFi.SSID().c_str());</span><br><span class="line">      Serial.<span class="built_in">printf</span>(<span class="string">&quot;PSW:%s\r\n&quot;</span>, WiFi.psk().c_str());</span><br><span class="line">      WiFi.printDiag(Serial);</span><br><span class="line">      <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">      //break;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      Serial.<span class="built_in">print</span>(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">      LED_Flag = !LED_Flag;</span><br><span class="line">      <span class="keyword">if</span>(LED_Flag)</span><br><span class="line">          digitalWrite(LED_BUILTIN, HIGH);</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">          digitalWrite(LED_BUILTIN, LOW); </span><br><span class="line">      delay(500);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  Serial.println(<span class="string">&quot;AutoConfig Faild!&quot;</span> );</span><br><span class="line">  <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">  //WiFi.printDiag(Serial);</span><br><span class="line">&#125;</span><br><span class="line">/*****************************************************</span><br><span class="line"> * 函数名称：htmlConfig()</span><br><span class="line"> * 函数说明：web配置WiFi函数</span><br><span class="line"> * 参数说明：无</span><br><span class="line">******************************************************/</span><br><span class="line">void <span class="function"><span class="title">htmlConfig</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    WiFi.mode(WIFI_AP_STA);//设置模式为AP+STA</span><br><span class="line">    digitalWrite(LED_BUILTIN, LOW);</span><br><span class="line">    WiFi.softAP(ssid, password);</span><br><span class="line">    Serial.println(<span class="string">&quot;AP设置完成&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    IPAddress myIP = WiFi.softAPIP();</span><br><span class="line">    Serial.<span class="built_in">print</span>(<span class="string">&quot;AP IP address: &quot;</span>);</span><br><span class="line">    Serial.println(myIP);</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (MDNS.begin(<span class="string">&quot;esp8266&quot;</span>)) &#123;</span><br><span class="line">      Serial.println(<span class="string">&quot;MDNS responder started&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    server.on(<span class="string">&quot;/&quot;</span>, handleRoot);</span><br><span class="line">    server.on(<span class="string">&quot;/HandleVal&quot;</span>, HTTP_GET, HandleVal);</span><br><span class="line">    server.onNotFound(handleNotFound);//请求失败回调函数</span><br><span class="line">  </span><br><span class="line">    server.begin();//开启服务器</span><br><span class="line">    Serial.println(<span class="string">&quot;HTTP server started&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span>(1)</span><br><span class="line">    &#123;</span><br><span class="line">        server.handleClient();</span><br><span class="line">        MDNS.update();  </span><br><span class="line">        <span class="keyword">if</span> (WiFi.status() == WL_CONNECTED)</span><br><span class="line">        &#123;</span><br><span class="line">            Serial.println(<span class="string">&quot;HtmlConfig Success&quot;</span>);</span><br><span class="line">            Serial.<span class="built_in">printf</span>(<span class="string">&quot;SSID:%s\r\n&quot;</span>, WiFi.SSID().c_str());</span><br><span class="line">            Serial.<span class="built_in">printf</span>(<span class="string">&quot;PSW:%s\r\n&quot;</span>, WiFi.psk().c_str());</span><br><span class="line">            Serial.println(<span class="string">&quot;HTML连接成功&quot;</span>);</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void setup(void) &#123;</span><br><span class="line">    pinMode(LED_BUILTIN, OUTPUT);</span><br><span class="line">    digitalWrite(LED_BUILTIN, HIGH);</span><br><span class="line">    Serial.begin(115200);</span><br><span class="line">    </span><br><span class="line">    bool wifiConfig = autoConfig();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(wifiConfig == <span class="literal">false</span>)</span><br><span class="line">        htmlConfig();//HTML配网</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void loop(void) &#123;</span><br><span class="line">    digitalWrite(LED_BUILTIN, HIGH);</span><br><span class="line">    delay(100);</span><br><span class="line">    digitalWrite(LED_BUILTIN, LOW);</span><br><span class="line">    delay(100);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+        
+            <section class="post-copyright">
+                
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Whef</span>
+                    </p>
+                
+
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://whef09.github.io/2025/04/27/ESP8266%E9%85%8D%E7%BD%91/">http://whef09.github.io/2025/04/27/ESP8266%E9%85%8D%E7%BD%91/</a></span>
+                    </p>
+                
+
+                
+                
+
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你相信<strong>命运</strong>吗？</span>
+                     </p>
+                
+            </section>
+        
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/"># 嵌入式开发</a>
+                    
+                    
+                </span>
+            </div>
+            <div>
+                
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+
+        
+        <section class="post-nav">
+            
+            
+                <a class="next" rel="next" href="/2025/04/11/1306%20OLED/">使用STM32F103C8T6点亮0.96寸SSD1306 I2C OLED显示屏</a>
+            
+        </section>
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Whef | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
